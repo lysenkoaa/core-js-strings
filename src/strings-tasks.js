@@ -41,7 +41,7 @@ function getStringLength(value) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-  return typeof value === 'string';
+  return typeof value === 'string' || value instanceof String;
 }
 
 /**
@@ -57,7 +57,7 @@ function isString(value) {
  *   concatenateStrings('', 'bb') => 'bb'
  */
 function concatenateStrings(value1, value2) {
-  return String(value1) + String(value2);
+  return value1.concat(value2);
 }
 
 /**
@@ -72,7 +72,7 @@ function concatenateStrings(value1, value2) {
  *   getFirstChar('') => ''
  */
 function getFirstChar(value) {
-  return typeof value === 'string' && value.length > 0 ? value[0] : '';
+  return typeof value === 'string' && value.length > 0 ? value.charAt(0) : '';
 }
 
 /**
@@ -102,7 +102,7 @@ function removeLeadingAndTrailingWhitespaces(value) {
  *   removeLeadingWhitespaces('\t\t\tHello, World! ') => 'Hello, World! '
  */
 function removeLeadingWhitespaces(value) {
-  return typeof value === 'string' ? value.replace(/^\s+/, '') : '';
+  return typeof value === 'string' ? value.trimStart() : '';
 }
 
 /**
@@ -117,7 +117,7 @@ function removeLeadingWhitespaces(value) {
  *   removeTrailingWhitespaces('\t\t\tHello, World! ') => '\t\t\tHello, World!'
  */
 function removeTrailingWhitespaces(value) {
-  return typeof value === 'string' ? value.replace(/\s+$/, '') : '';
+  return typeof value === 'string' ? value.trimEnd() : '';
 }
 
 /**
@@ -150,7 +150,14 @@ function repeatString(str, times) {
  *   removeFirstOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeFirstOccurrences(str, value) {
-  return typeof str === 'string' ? str.replace(value, '') : '';
+  const index = str.indexOf(value);
+
+  if (index !== -1) {
+    const result = str.slice(0, index) + str.slice(index + value.length);
+    return result;
+  }
+
+  return str;
 }
 
 /**
@@ -166,12 +173,14 @@ function removeFirstOccurrences(str, value) {
  *   removeLastOccurrences('ABABAB', 'BA') => 'ABAB'.
  */
 function removeLastOccurrences(str, value) {
-  if (typeof str !== 'string') {
-    return '';
+  const index = str.lastIndexOf(value);
+
+  if (index !== -1) {
+    const result = str.slice(0, index) + str.slice(index + value.length);
+    return result;
   }
 
-  const regex = new RegExp(value);
-  return str.replace(regex, '');
+  return str;
 }
 
 /**
@@ -208,17 +217,7 @@ function sumOfCodes(str) {
  *   startsWith('Hello World', 'Hello') => true
  */
 function startsWith(str, substr) {
-  if (typeof str !== 'string' || typeof substr !== 'string') {
-    return false;
-  }
-
-  for (let i = 0; i < substr.length; i += 1) {
-    if (str[i] !== substr[i]) {
-      return false;
-    }
-  }
-
-  return true;
+  return str.startsWith(substr);
 }
 
 /**
@@ -233,24 +232,7 @@ function startsWith(str, substr) {
  *   endsWith('Hello World', 'Hello') => false
  */
 function endsWith(str, substr) {
-  if (typeof str !== 'string' || typeof substr !== 'string') {
-    return false;
-  }
-
-  const strLength = str.length;
-  const substrLength = substr.length;
-
-  if (substrLength > strLength) {
-    return false;
-  }
-
-  for (let i = 0; i < substrLength; i += 1) {
-    if (str[strLength - substrLength + i] !== substr[i]) {
-      return false; // Characters don't match
-    }
-  }
-
-  return true;
+  return str.endsWith(substr);
 }
 
 /**
@@ -330,17 +312,7 @@ function orderAlphabetically(str) {
  *   containsSubstring('12345', '34') => true
  */
 function containsSubstring(str, substring) {
-  if (typeof str !== 'string' || typeof substring !== 'string') {
-    return false;
-  }
-
-  for (let i = 0; i <= str.length - substring.length; i += 1) {
-    if (str.slice(i, i + substring.length) === substring) {
-      return true;
-    }
-  }
-
-  return false;
+  return str.includes(substring);
 }
 
 /**
